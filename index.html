@@ -19,9 +19,79 @@
       font-weight: 500;
       margin-bottom: 0.5em;
     }
+    #password-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(135deg, #fffaf6 0%, #f8f4ef 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #main-content {
+      display: none;
+    }
+    .password-form {
+      background: white;
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(180,142,92,0.15);
+      border: 1px solid #f3e9e1;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    .password-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e5e3df;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      margin: 1rem 0;
+      text-align: center;
+    }
+    .password-input:focus {
+      outline: none;
+      border-color: #b48e5c;
+    }
+    .password-btn {
+      background: #b48e5c;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .password-btn:hover {
+      background: #9e7a4a;
+    }
+    .error-message {
+      color: #d63384;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
   </style>
 </head>
 <body>
+  <!-- Password Protection Screen -->
+  <div id="password-screen">
+    <div class="password-form">
+      <h2 style="color: #b48e5c; font-family: 'Playfair Display', serif; margin-bottom: 1rem;">🔒 Geschützter Bereich</h2>
+      <p style="color: #7c6f57; margin-bottom: 1.5rem;">Bitte gib das Passwort ein, um zur Hochzeitsseite zu gelangen:</p>
+      <input type="password" id="password-input" class="password-input" placeholder="Passwort eingeben" />
+      <br>
+      <button onclick="checkPassword()" class="password-btn">Anmelden</button>
+      <div id="error-message" class="error-message"></div>
+    </div>
+  </div>
+
+  <!-- Main Content (hidden by default) -->
+  <div id="main-content">
 
 
   <!-- Hero -->
@@ -322,6 +392,47 @@
     if (waQR && window.QRCode) {
       QRCode.toCanvas(waQR, waTarget, { width: 224, margin: 1 }, (err)=>{ if(err) console.error(err); });
     }
+
+    // Passwort-Schutz Funktionalität
+    function checkPassword() {
+      const input = document.getElementById('passwordInput');
+      const errorDiv = document.getElementById('passwordError');
+      const password = input.value.trim();
+      
+      // Hier das richtige Passwort setzen
+      const correctPassword = 'CarinaPhil2025'; // Ändern Sie dies zu Ihrem gewünschten Passwort
+      
+      if (password === correctPassword) {
+        // Passwort korrekt - Passwort-Bildschirm ausblenden
+        document.getElementById('password-screen').style.display = 'none';
+        localStorage.setItem('wedding-auth', 'true');
+      } else {
+        // Passwort falsch - Fehlermeldung anzeigen
+        errorDiv.textContent = 'Falsches Passwort. Bitte versuchen Sie es erneut.';
+        errorDiv.style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    // Enter-Taste im Passwort-Feld behandeln
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
+
+    // Beim Laden der Seite prüfen, ob bereits authentifiziert
+    window.addEventListener('load', function() {
+      const isAuthenticated = localStorage.getItem('wedding-auth');
+      if (isAuthenticated === 'true') {
+        // Bereits authentifiziert - Passwort-Bildschirm ausblenden
+        document.getElementById('password-screen').style.display = 'none';
+      } else {
+        // Nicht authentifiziert - Passwort-Bildschirm anzeigen
+        document.getElementById('password-screen').style.display = 'flex';
+      }
+    });
   </script>
 </body>
 </html>
