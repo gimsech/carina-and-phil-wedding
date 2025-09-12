@@ -395,8 +395,8 @@
 
     // Passwort-Schutz Funktionalität
     function checkPassword() {
-      const input = document.getElementById('passwordInput');
-      const errorDiv = document.getElementById('passwordError');
+      const input = document.getElementById('password-input');
+      const errorDiv = document.getElementById('error-message');
       const password = input.value.trim();
       
       // Hier das richtige Passwort setzen
@@ -416,7 +416,7 @@
     }
 
     // Enter-Taste im Passwort-Feld behandeln
-    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+    document.getElementById('password-input').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         checkPassword();
       }
