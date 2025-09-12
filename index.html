@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Carina & Phil – 17.10.2025</title>
   <meta name="description" content="Alle Infos zu unserer standesamtlichen Trauung am 17.10.2025 in Berlin: Ablauf, Orte, Anfahrt, WhatsApp-Gruppe, Kalenderdatei, FAQ & Fotoupload." />
   <link rel="stylesheet" href="styles/main.css">
@@ -74,6 +75,118 @@
       color: #d63384;
       font-size: 0.9rem;
       margin-top: 0.5rem;
+    }
+    
+    /* Mobile Responsivität */
+    @media (max-width: 768px) {
+      body {
+        font-size: 18px !important;
+        line-height: 1.6 !important;
+      }
+      
+      h1 {
+        font-size: 2.5rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 1rem !important;
+      }
+      
+      h2 {
+        font-size: 2rem !important;
+        line-height: 1.3 !important;
+        margin: 2rem 0 1.5rem 0 !important;
+      }
+      
+      h3 {
+        font-size: 1.5rem !important;
+        line-height: 1.4 !important;
+      }
+      
+      p, li {
+        font-size: 1.1rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 1rem !important;
+      }
+      
+      /* Passwort-Bildschirm Mobile */
+      .password-form {
+        padding: 2rem 1.5rem !important;
+        margin: 1rem !important;
+        width: calc(100% - 2rem) !important;
+        max-width: none !important;
+      }
+      
+      .password-input {
+        font-size: 1.2rem !important;
+        padding: 1.2rem !important;
+      }
+      
+      .password-btn {
+        font-size: 1.2rem !important;
+        padding: 1.2rem 2.5rem !important;
+        width: 100% !important;
+      }
+      
+      /* Container und Abstände */
+      .container {
+        padding: 0 1.5rem !important;
+      }
+      
+      /* Flexbox Layouts für Mobile */
+      [style*="display:flex"] {
+        flex-direction: column !important;
+      }
+      
+      /* Buttons und Links größer */
+      .chip {
+        font-size: 1.1rem !important;
+        padding: 0.8rem 1.5rem !important;
+        margin: 0.5rem 0 !important;
+        display: block !important;
+        text-align: center !important;
+      }
+      
+      /* QR Code größer */
+      canvas {
+        width: 200px !important;
+        height: 200px !important;
+      }
+      
+      /* Sections mehr Abstand */
+      section {
+        margin: 3rem 0 !important;
+        padding: 2rem 1.5rem !important;
+      }
+      
+      /* Locations Cards mobile-friendly */
+      [style*="min-width:220px"] {
+        min-width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 2rem !important;
+      }
+      
+      /* FAQ Abschnitte */
+      details {
+        margin: 1.5rem 0 !important;
+      }
+      
+      summary {
+        font-size: 1.2rem !important;
+        padding: 1rem !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        font-size: 19px !important;
+      }
+      
+      h1 {
+        font-size: 2.2rem !important;
+      }
+      
+      .password-form {
+        padding: 1.5rem 1rem !important;
+      }
     }
   </style>
 </head>
@@ -423,10 +536,24 @@
       }
     });
 
-    // Beim Laden der Seite prüfen, ob bereits authentifiziert
+    // Beim Laden der Seite prüfen, ob bereits authentifiziert oder URL-Parameter vorhanden
     window.addEventListener('load', function() {
+      // URL-Parameter prüfen (z.B. ?pw=CarinaPhil2025)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlPassword = urlParams.get('pw');
+      const correctPassword = 'CarinaPhil2025';
+      
       const isAuthenticated = localStorage.getItem('wedding-auth');
-      if (isAuthenticated === 'true') {
+      
+      // Automatisches Login über URL-Parameter
+      if (urlPassword === correctPassword) {
+        localStorage.setItem('wedding-auth', 'true');
+        // URL bereinigen (Parameter entfernen)
+        window.history.replaceState({}, document.title, window.location.pathname);
+        // Direkt zur Website weiterleiten
+        document.getElementById('password-screen').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+      } else if (isAuthenticated === 'true') {
         // Bereits authentifiziert - Passwort-Bildschirm ausblenden und Hauptinhalt anzeigen
         document.getElementById('password-screen').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
