@@ -31,7 +31,7 @@
       <div class="chip" aria-label="Datum">17. Oktober 2025 · Berlin</div>
       <h1 style="font-family:'Playfair Display',serif;font-size:2.2rem;color:#b48e5c;font-weight:700;letter-spacing:-2px;margin-bottom:0.3rem;">Carina & Phil</h1>
       <p style="font-size:1.1rem;color:#7c6f57;font-family:'Quicksand',Arial,sans-serif;margin-bottom:1.2rem;">Wir freuen uns, mit euch zu feiern!<br>Hier findet ihr alle Infos rund um Trauung, Sektempfang & Essen.</p>
-      <img src="./IMG_5862.jpeg" alt="Carina und Phil" style="width:100%;max-width:320px;height:180px;border-radius:14px;margin:0 auto 1.2rem auto;box-shadow:0 4px 24px rgba(180,142,92,0.09);object-fit:cover;display:block;" />
+      <img src="./IMG_5862.jpeg" alt="Carina und Phil" style="width:280px;height:280px;border-radius:14px;margin:0 auto 1.2rem auto;box-shadow:0 4px 24px rgba(180,142,92,0.09);object-fit:cover;display:block;" />
       <div id="countdown" style="margin:1.2rem auto 0 auto;font-size:1.2rem;color:#b48e5c;font-family:'Quicksand',Arial,sans-serif;font-weight:600;"></div>
       <div style="margin-top:1.5rem;display:flex;flex-wrap:wrap;justify-content:center;gap:1.2rem;">
         <a href="#ablauf" style="font-size:1rem;color:#b48e5c;text-decoration:underline;font-family:'Quicksand',Arial,sans-serif;">Ablauf</a>
@@ -140,7 +140,7 @@
     <p style="text-align:center;">Ihr könnt alle Programmpunkte als eine Datei hinzufügen.</p>
     <div style="margin-top:2.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;">
       <button id="downloadIcs" class="btn btn-primary" style="display:flex;align-items:center;gap:0.7rem;font-size:1.08rem;">
-        <span style="font-size:1.3rem;">📅</span> ICS herunterladen
+        <span style="font-size:1.8rem;">📅</span> ICS herunterladen
       </button>
       <span style="font-size:0.95rem;color:#7c6f57;text-align:center;display:block;">Zeitzone: Europe/Berlin · Keine Erinnerungen voreingestellt</span>
     </div>
@@ -150,7 +150,16 @@
   <section id="fotos" class="section anchor-offset py-10">
     <h2 style="text-align:center;font-size:2.2rem;color:#b48e5c;font-family:'Playfair Display',serif;font-weight:700;">Fotos</h2>
     <p style="text-align:center;">Teilt eure Lieblingsmomente mit uns – danke! 📸</p>
-    <div style="margin-top:2.5rem;text-align:center;">
+    
+    <!-- Gefächerter Bilder-Stapel (Platzhalter) -->
+    <div style="margin:2rem auto;max-width:300px;position:relative;height:200px;">
+      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%) rotate(-8deg);width:120px;height:80px;background:#f3e9e1;border:2px solid #e5ddd4;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);z-index:1;"></div>
+      <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%) rotate(-2deg);width:120px;height:80px;background:#f8f4ef;border:2px solid #e5ddd4;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);z-index:2;"></div>
+      <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%) rotate(5deg);width:120px;height:80px;background:#fffaf6;border:2px solid #e5ddd4;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);z-index:3;"></div>
+      <div style="position:absolute;top:15px;left:50%;transform:translateX(-50%);width:120px;height:80px;background:#fff;border:2px solid #b48e5c;border-radius:8px;box-shadow:0 4px 12px rgba(180,142,92,0.2);z-index:4;display:flex;align-items:center;justify-content:center;color:#b48e5c;font-size:2rem;">📷</div>
+    </div>
+    
+    <div style="margin-top:1.5rem;text-align:center;">
       <p style="font-size:1.08rem;">Upload‑Link: <a id="uploadLink" class="underline" href="https://photos.app.goo.gl/ipo4vCDDoo3WpvmHA" target="_blank" rel="noopener">Google Fotos Album öffnen</a></p>
       <p style="margin-top:0.7rem;font-size:0.95rem;color:#7c6f57;">Wir ergänzen den finalen Link, sobald er feststeht.</p>
     </div>
