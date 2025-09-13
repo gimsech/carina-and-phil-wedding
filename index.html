@@ -227,11 +227,56 @@
       align-items: center;
       justify-content: center;
     }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      padding: 1rem;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: background 0.2s ease;
+    }
+    .lightbox-nav:hover {
+      background: rgba(0,0,0,0.7);
+    }
+    .lightbox-prev {
+      left: 30px;
+    }
+    .lightbox-next {
+      right: 30px;
+    }
+    .lightbox-counter {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 1rem;
+      background: rgba(0,0,0,0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+    }
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
-      margin: 1.5rem 0;
+      margin: 1.5rem auto;
+      max-width: 400px;
+    }
+    @media (min-width: 600px) {
+      .gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 600px;
+      }
     }
     .gallery-item {
       cursor: pointer;
@@ -248,6 +293,56 @@
       height: 120px;
       object-fit: cover;
     }
+    
+    /* Live-Programmpunkt Styles */
+    .schedule-item {
+      transition: all 0.3s ease;
+    }
+    .schedule-item.current {
+      background: linear-gradient(135deg, rgba(180,142,92,0.1) 0%, rgba(180,142,92,0.05) 100%);
+      border-left: 4px solid #b48e5c;
+      padding-left: 1.5rem;
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(180,142,92,0.2);
+      border-radius: 8px;
+    }
+    .schedule-item.past {
+      opacity: 0.6;
+    }
+    .schedule-item.current .emoji {
+      animation: bounce 1s infinite;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+    
+    /* Simulations-Button */
+    .simulation-controls {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: rgba(180,142,92,0.9);
+      padding: 1rem;
+      border-radius: 8px;
+      color: white;
+      font-size: 0.9rem;
+    }
+    .simulation-controls button {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 0.3rem 0.6rem;
+      margin: 0.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .simulation-controls button:hover {
+      background: rgba(255,255,255,0.3);
+    }
   </style>
 </head>
 <body>
@@ -261,6 +356,17 @@
       <button onclick="checkPassword()" class="password-btn">Anmelden</button>
       <div id="error-message" class="error-message"></div>
     </div>
+  </div>
+
+  <!-- Simulations-Controls (DEV only) -->
+  <div class="simulation-controls" id="simulation-controls">
+    <div style="margin-bottom:0.5rem;font-weight:600;">Zeit-Simulation</div>
+    <button onclick="simulateTime('09:45')">09:45 - Vor Trauung</button>
+    <button onclick="simulateTime('10:15')">10:15 - Während Trauung</button>
+    <button onclick="simulateTime('10:50')">10:50 - Sektempfang</button>
+    <button onclick="simulateTime('12:15')">12:15 - Essen</button>
+    <button onclick="simulateTime('16:00')">16:00 - Nach allem</button>
+    <button onclick="resetTime()">Reset (Live)</button>
   </div>
 
   <!-- Main Content (hidden by default) -->
@@ -291,30 +397,29 @@
     <h2>Ablauf</h2>
     <p style="margin-bottom:1.2rem;">Bitte 15 Minuten vor Beginn da sein.</p>
     <ul style="list-style:none;padding:0;max-width:520px;margin:2rem auto 0 auto;">
-      <li style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
-        <span style="font-size:2rem;">💍</span>
+      <li id="schedule-wedding" class="schedule-item" style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
+        <span class="emoji" style="font-size:2rem;">💍</span>
         <div>
           <div style="font-weight:600;font-size:1.08rem;">10:00 – 10:45 · Trauung</div>
           <div style="font-size:0.98rem;color:#7c6f57;">Standesamt Tempelhof-Schöneberg<br><a href="https://www.google.com/maps/search/?api=1&query=Freiherr-vom-Stein-Stra%C3%9Fe+1,+10825+Berlin" target="_blank" style="color:#b48e5c;text-decoration:underline;">Freiherr-vom-Stein-Straße 1</a></div>
         </div>
       </li>
-      <li style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
-        <span style="font-size:2rem;">🥂</span>
+      <li id="schedule-reception" class="schedule-item" style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
+        <span class="emoji" style="font-size:2rem;">🥂</span>
         <div>
           <div style="font-weight:600;font-size:1.08rem;">Im Anschluss · Sektempfang</div>
           <div style="font-size:0.98rem;color:#7c6f57;">Direkt nach der Trauung im Park am Standesamt<br>Tipp in der Nähe: <a href="https://www.google.com/maps/search/?api=1&query=Kufsteiner+Str.+68,+10825+Berlin" target="_blank" style="color:#b48e5c;text-decoration:underline;">»Harry‑Potter«‑Spielplatz</a> (toll für Kids).</div>
         </div>
       </li>
-            <li style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
-        <span style="font-size:2rem;">🍽️</span>
+      <li id="schedule-dinner" class="schedule-item" style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
+        <span class="emoji" style="font-size:2rem;">🍽️</span>
         <div>
           <div style="font-weight:600;font-size:1.08rem;">12:00 – 15:30 · Essen</div>
           <div style="font-size:0.98rem;color:#7c6f57;">Tomasa Villa Kreuzberg<br><a href="https://www.google.com/maps/search/?api=1&query=Kreuzbergstra%C3%9Fe+62,+10965+Berlin" target="_blank" style="color:#b48e5c;text-decoration:underline;">Kreuzbergstraße 62</a></div>
         </div>
       </li>
-    
-      <li style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
-        <span style="font-size:2rem;">🧡</span>
+      <li id="schedule-end" class="schedule-item" style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
+        <span class="emoji" style="font-size:2rem;">🧡</span>
         <div>
           <div style="font-weight:600;font-size:1.08rem;">Den Rest des Tages · Kleine Auszeit zu zweit</div>
           <div style="font-size:0.98rem;color:#7c6f57;">Wir verabschieden uns freuen uns auf eure Fotos.</div>
@@ -334,7 +439,7 @@
         <ul style="margin:0 0 1.2rem 0;padding:0;list-style:none;color:#7c6f57;font-size:0.95rem;">
           <li><strong>Wichtig:</strong> Bitte unbedingt bei der angegebenen Adresse reingehen!</li>
           <li>Bitte 15 Minuten vor Beginn da sein.</li>
-          <li>Trauzimmer: 30 Sitzplätze – bitte überlasst sie denen, die schlechter stehen können.</li>
+          <li>Trauzimmer: Platz für 30 Personen, aber begrenzte Sitzplätze – bitte überlasst sie denen, die schlechter stehen können.</li>
           <li>Barrierefreiheit: Fahrstuhl vorhanden.</li>
           <li>In der Nähe: »Harry‑Potter«‑Spielplatz (toll für Kids).</li>
           <li>Parkplätze: Am Freitag ist Markt – weniger Plätze verfügbar. Alternativ: Parkhaus in der Nähe.</li>
@@ -395,17 +500,17 @@
       <h3 style="color:#b48e5c;font-family:'Playfair Display',serif;margin-bottom:1rem;">📸 So findet ihr das Standesamt</h3>
       <p style="color:#7c6f57;margin-bottom:1.5rem;">Zur besseren Orientierung - klickt auf die Bilder für eine größere Ansicht:</p>
       
-      <div class="gallery-grid" style="max-width:600px;margin:0 auto;">
-        <div class="gallery-item" onclick="openLightbox('./bilder/001.jpeg')">
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox(0)">
           <img src="./bilder/001.jpeg" alt="Standesamt Eingang" loading="lazy" />
         </div>
-        <div class="gallery-item" onclick="openLightbox('./bilder/002.jpeg')">
+        <div class="gallery-item" onclick="openLightbox(1)">
           <img src="./bilder/002.jpeg" alt="Standesamt Gebäude" loading="lazy" />
         </div>
-        <div class="gallery-item" onclick="openLightbox('./bilder/003.jpeg')">
+        <div class="gallery-item" onclick="openLightbox(2)">
           <img src="./bilder/003.jpeg" alt="Standesamt Orientierung" loading="lazy" />
         </div>
-        <div class="gallery-item" onclick="openLightbox('./bilder/004.jpeg')">
+        <div class="gallery-item" onclick="openLightbox(3)">
           <img src="./bilder/004.jpeg" alt="Standesamt Weg" loading="lazy" />
         </div>
       </div>
@@ -415,7 +520,10 @@
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox" onclick="closeLightbox()">
     <div class="lightbox-close" onclick="closeLightbox()">×</div>
+    <div class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); previousImage()">‹</div>
+    <div class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); nextImage()">›</div>
     <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
+    <div class="lightbox-counter" id="lightbox-counter">1 / 4</div>
   </div>
 
   <!-- WhatsApp -->
@@ -475,15 +583,16 @@
           <div style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">
             <p><strong>Wichtige Hinweise:</strong></p>
             <ul style="margin:0.5rem 0;padding-left:1.2rem;">
-              <li>Bitte unbedingt bei der angegebenen Adresse (Freiherr-vom-Stein-Straße 1) reingehen!</li>
+              <li>Bitte unbedingt bei der angegebenen Adresse (<a href="https://www.google.com/maps/search/?api=1&query=Freiherr-vom-Stein-Stra%C3%9Fe+1,+10825+Berlin" target="_blank" style="color:#b48e5c;text-decoration:underline;">Freiherr-vom-Stein-Straße 1, 10825 Berlin</a>) reingehen!</li>
               <li>15 Minuten vor Beginn da sein</li>
-              <li>Trauzimmer hat 30 Sitzplätze – bitte überlasst sie denen, die schlechter stehen können</li>
+              <li>Trauzimmer bietet Platz für 30 Personen, aber begrenzte Sitzplätze – bitte überlasst sie denen, die schlechter stehen können</li>
               <li>Fahrstuhl für Barrierefreiheit vorhanden</li>
             </ul>
-            <p><strong>Fotograf & Sektempfang:</strong></p>
+            <p><strong>Sektempfang & Fotograf:</strong></p>
             <ul style="margin:0.5rem 0;padding-left:1.2rem;">
-              <li>Professioneller Fotograf macht Gruppenfotos beim Sektempfang</li>
-              <li>Bei schlechtem Wetter im Standesamt-Foyer</li>
+              <li>Bei gutem Wetter: Sektempfang draußen im Park</li>
+              <li>Bei schlechtem Wetter: Sektempfang im Standesamt-Foyer</li>
+              <li>Professioneller Fotograf macht Gruppenfotos</li>
               <li><strong>Bitte keinen Reis werfen!</strong> 🚫🌾</li>
             </ul>
             <p>Mehr zur <a href="#orte" style="color:#b48e5c;text-decoration:underline;">Anfahrt & Karten</a></p>
@@ -534,13 +643,13 @@
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Fotos & Fotograf</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">📸 Es wird einen professionellen Fotografen geben für Gruppenfotos beim Sektempfang (bei schlechtem Wetter im Standesamt-Foyer).<br><br>Fotografiert auch gerne selbst und teilt eure Bilder über unseren <a href="#fotos" style="color:#b48e5c;text-decoration:underline;">Foto-Upload</a>.<br><br><strong>Wichtig:</strong> Bitte keinen Reis werfen! 🚫🌾</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">📸 Es wird einen professionellen Fotografen geben für Gruppenfotos beim Sektempfang.<br><br>Fotografiert auch gerne selbst und teilt eure Bilder über unseren <a href="#fotos" style="color:#b48e5c;text-decoration:underline;">Foto-Upload</a>.</p>
         </details>
       </li>
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Parken & ÖPNV</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Routen bitte über Google Maps planen. Plant ein paar Minuten Puffer ein – vor allem am Standesamt.<br><br>Alle Details zur Anfahrt findet ihr unter <a href="#orte" style="color:#b48e5c;text-decoration:underline;">Orte & Anfahrt</a>.</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Routen bitte über Google Maps planen. Plant ein paar Minuten Puffer ein – vor allem am Standesamt.<br><br><strong>ÖPNV Berlin:</strong> Das Deutschlandticket gilt! Alternativ könnt ihr ein Tagesticket kaufen. Bei konkreteren Fragen zum öffentlichen Nahverkehr in Berlin fragt gerne uns direkt.<br><br>Alle Details zur Anfahrt findet ihr unter <a href="#orte" style="color:#b48e5c;text-decoration:underline;">Orte & Anfahrt</a>.</p>
         </details>
       </li>
       <li style="padding:1.2rem 0;">
@@ -732,26 +841,135 @@
     });
 
     // Lightbox Funktionen
-    function openLightbox(imageSrc) {
+    const lightboxImages = [
+      { src: './bilder/001.jpeg', alt: 'Standesamt Eingang' },
+      { src: './bilder/002.jpeg', alt: 'Standesamt Gebäude' },
+      { src: './bilder/003.jpeg', alt: 'Standesamt Orientierung' },
+      { src: './bilder/004.jpeg', alt: 'Standesamt Weg' }
+    ];
+    let currentImageIndex = 0;
+
+    function openLightbox(imageIndex) {
+      currentImageIndex = imageIndex;
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightbox-img');
-      lightboxImg.src = imageSrc;
+      const counter = document.getElementById('lightbox-counter');
+      
+      lightboxImg.src = lightboxImages[currentImageIndex].src;
+      lightboxImg.alt = lightboxImages[currentImageIndex].alt;
+      counter.textContent = `${currentImageIndex + 1} / ${lightboxImages.length}`;
+      
       lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Prevent scrolling
+      document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox() {
       const lightbox = document.getElementById('lightbox');
       lightbox.classList.remove('active');
-      document.body.style.overflow = 'auto'; // Restore scrolling
+      document.body.style.overflow = 'auto';
     }
 
-    // ESC-Taste zum Schließen der Lightbox
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % lightboxImages.length;
+      updateLightboxImage();
+    }
+
+    function previousImage() {
+      currentImageIndex = (currentImageIndex - 1 + lightboxImages.length) % lightboxImages.length;
+      updateLightboxImage();
+    }
+
+    function updateLightboxImage() {
+      const lightboxImg = document.getElementById('lightbox-img');
+      const counter = document.getElementById('lightbox-counter');
+      
+      lightboxImg.src = lightboxImages[currentImageIndex].src;
+      lightboxImg.alt = lightboxImages[currentImageIndex].alt;
+      counter.textContent = `${currentImageIndex + 1} / ${lightboxImages.length}`;
+    }
+
+    // Keyboard Navigation
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeLightbox();
+      if (document.getElementById('lightbox').classList.contains('active')) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        } else if (e.key === 'ArrowRight') {
+          nextImage();
+        } else if (e.key === 'ArrowLeft') {
+          previousImage();
+        }
       }
     });
+
+    // Live-Programmpunkt Highlighting
+    let simulatedTime = null;
+
+    function getCurrentTime() {
+      if (simulatedTime) return simulatedTime;
+      
+      const now = new Date();
+      const eventDate = new Date('2025-10-17');
+      const today = new Date();
+      
+      // Nur am Hochzeitstag highlighten
+      if (today.toDateString() === eventDate.toDateString()) {
+        return now;
+      }
+      return null;
+    }
+
+    function updateScheduleHighlight() {
+      const currentTime = getCurrentTime();
+      if (!currentTime) {
+        // Alle Items auf normal setzen wenn nicht am Hochzeitstag
+        document.querySelectorAll('.schedule-item').forEach(item => {
+          item.classList.remove('current', 'past');
+        });
+        return;
+      }
+
+      const hours = currentTime.getHours();
+      const minutes = currentTime.getMinutes();
+      const timeInMinutes = hours * 60 + minutes;
+
+      const scheduleItems = [
+        { id: 'schedule-wedding', start: 10 * 60, end: 10 * 60 + 45 }, // 10:00-10:45
+        { id: 'schedule-reception', start: 10 * 60 + 45, end: 12 * 60 }, // 10:45-12:00
+        { id: 'schedule-dinner', start: 12 * 60, end: 15 * 60 + 30 }, // 12:00-15:30
+        { id: 'schedule-end', start: 15 * 60 + 30, end: 24 * 60 } // 15:30+
+      ];
+
+      scheduleItems.forEach(item => {
+        const element = document.getElementById(item.id);
+        if (!element) return;
+
+        element.classList.remove('current', 'past');
+
+        if (timeInMinutes >= item.start && timeInMinutes < item.end) {
+          element.classList.add('current');
+        } else if (timeInMinutes >= item.end) {
+          element.classList.add('past');
+        }
+      });
+    }
+
+    // Simulation Functions (DEV)
+    function simulateTime(timeStr) {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      simulatedTime = new Date('2025-10-17');
+      simulatedTime.setHours(hours, minutes, 0, 0);
+      updateScheduleHighlight();
+    }
+
+    function resetTime() {
+      simulatedTime = null;
+      updateScheduleHighlight();
+    }
+
+    // Update alle 30 Sekunden
+    setInterval(updateScheduleHighlight, 30000);
+    // Initiales Update
+    updateScheduleHighlight();
   </script>
 </body>
 </html>
