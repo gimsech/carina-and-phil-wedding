@@ -317,32 +317,7 @@
       40% { transform: translateY(-10px); }
       60% { transform: translateY(-5px); }
     }
-    
-    /* Simulations-Button */
-    .simulation-controls {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 1000;
-      background: rgba(180,142,92,0.9);
-      padding: 1rem;
-      border-radius: 8px;
-      color: white;
-      font-size: 0.9rem;
-    }
-    .simulation-controls button {
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-      padding: 0.3rem 0.6rem;
-      margin: 0.2rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-    .simulation-controls button:hover {
-      background: rgba(255,255,255,0.3);
-    }
+
   </style>
 </head>
 <body>
@@ -358,16 +333,6 @@
     </div>
   </div>
 
-  <!-- Simulations-Controls (DEV only) -->
-  <div class="simulation-controls" id="simulation-controls">
-    <div style="margin-bottom:0.5rem;font-weight:600;">Zeit-Simulation</div>
-    <button onclick="simulateTime('09:45')">09:45 - Vor Trauung</button>
-    <button onclick="simulateTime('10:15')">10:15 - Während Trauung</button>
-    <button onclick="simulateTime('10:50')">10:50 - Sektempfang</button>
-    <button onclick="simulateTime('12:15')">12:15 - Essen</button>
-    <button onclick="simulateTime('16:00')">16:00 - Nach allem</button>
-    <button onclick="resetTime()">Reset (Live)</button>
-  </div>
 
   <!-- Main Content (hidden by default) -->
   <div id="main-content">
@@ -947,18 +912,7 @@
       });
     }
 
-    // Simulation Functions (DEV)
-    function simulateTime(timeStr) {
-      const [hours, minutes] = timeStr.split(':').map(Number);
-      simulatedTime = new Date('2025-10-17');
-      simulatedTime.setHours(hours, minutes, 0, 0);
-      updateScheduleHighlight();
-    }
 
-    function resetTime() {
-      simulatedTime = null;
-      updateScheduleHighlight();
-    }
 
     // Update alle 30 Sekunden
     setInterval(updateScheduleHighlight, 30000);
