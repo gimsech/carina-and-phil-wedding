@@ -188,6 +188,66 @@
         padding: 1.5rem 1rem !important;
       }
     }
+    
+    /* Lightbox für Standesamt-Bilder */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .gallery-item {
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    .gallery-item:hover {
+      transform: scale(1.05);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
@@ -303,7 +363,60 @@
         </ul>
       </div>
     </div>
+    
+    <!-- Google Maps -->
+    <div style="margin-top:3rem;display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;">
+      <div style="flex:1;min-width:300px;max-width:450px;">
+        <h3 style="text-align:center;color:#b48e5c;font-family:'Playfair Display',serif;margin-bottom:1rem;">📍 Standesamt</h3>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2428.456789!2d13.3619444!3d52.4877778!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a8510937530123%3A0x456789abcdef!2sFreiherr-vom-Stein-Str.%201%2C%2010825%20Berlin!5e0!3m2!1sde!2sde!4v1234567890123!5m2!1sde!2sde" 
+                width="100%" 
+                height="250" 
+                style="border:0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+      <div style="flex:1;min-width:300px;max-width:450px;">
+        <h3 style="text-align:center;color:#b48e5c;font-family:'Playfair Display',serif;margin-bottom:1rem;">🍽️ Tomasa Villa</h3>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2428.789012!2d13.3889444!3d52.4944444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a8514567890123%3A0x789012345abcdef!2sKreuzbergstra%C3%9Fe%2062%2C%2010965%20Berlin!5e0!3m2!1sde!2sde!4v1234567890124!5m2!1sde!2sde" 
+                width="100%" 
+                height="250" 
+                style="border:0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+    
+    <!-- Standesamt Bilder -->
+    <div style="margin-top:3rem;text-align:center;">
+      <h3 style="color:#b48e5c;font-family:'Playfair Display',serif;margin-bottom:1rem;">📸 So findet ihr das Standesamt</h3>
+      <p style="color:#7c6f57;margin-bottom:1.5rem;">Zur besseren Orientierung - klickt auf die Bilder für eine größere Ansicht:</p>
+      
+      <div class="gallery-grid" style="max-width:600px;margin:0 auto;">
+        <div class="gallery-item" onclick="openLightbox('./bilder/001.jpeg')">
+          <img src="./bilder/001.jpeg" alt="Standesamt Eingang" loading="lazy" />
+        </div>
+        <div class="gallery-item" onclick="openLightbox('./bilder/002.jpeg')">
+          <img src="./bilder/002.jpeg" alt="Standesamt Gebäude" loading="lazy" />
+        </div>
+        <div class="gallery-item" onclick="openLightbox('./bilder/003.jpeg')">
+          <img src="./bilder/003.jpeg" alt="Standesamt Orientierung" loading="lazy" />
+        </div>
+        <div class="gallery-item" onclick="openLightbox('./bilder/004.jpeg')">
+          <img src="./bilder/004.jpeg" alt="Standesamt Weg" loading="lazy" />
+        </div>
+      </div>
+    </div>
   </section>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="closeLightbox()">×</div>
+    <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
+  </div>
 
   <!-- WhatsApp -->
   <section id="whatsapp" class="section anchor-offset py-10">
@@ -358,50 +471,82 @@
     <ul style="list-style:none;padding:0;margin:0;">
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
+          <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">🏛️ Standesamt - Ablauf & Details</summary>
+          <div style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">
+            <p><strong>Wichtige Hinweise:</strong></p>
+            <ul style="margin:0.5rem 0;padding-left:1.2rem;">
+              <li>Bitte unbedingt bei der angegebenen Adresse (Freiherr-vom-Stein-Straße 1) reingehen!</li>
+              <li>15 Minuten vor Beginn da sein</li>
+              <li>Trauzimmer hat 30 Sitzplätze – bitte überlasst sie denen, die schlechter stehen können</li>
+              <li>Fahrstuhl für Barrierefreiheit vorhanden</li>
+            </ul>
+            <p><strong>Fotograf & Sektempfang:</strong></p>
+            <ul style="margin:0.5rem 0;padding-left:1.2rem;">
+              <li>Professioneller Fotograf macht Gruppenfotos beim Sektempfang</li>
+              <li>Bei schlechtem Wetter im Standesamt-Foyer</li>
+              <li><strong>Bitte keinen Reis werfen!</strong> 🚫🌾</li>
+            </ul>
+            <p>Mehr zur <a href="#orte" style="color:#b48e5c;text-decoration:underline;">Anfahrt & Karten</a></p>
+          </div>
+        </details>
+      </li>
+      <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
+        <details>
+          <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">🍽️ Tomasa Villa - Restaurant Details</summary>
+          <div style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">
+            <p><strong>Restaurant-Infos:</strong></p>
+            <ul style="margin:0.5rem 0;padding-left:1.2rem;">
+              <li>À la carte – keine Menüwahl nötig, ihr bestellt vor Ort</li>
+              <li>Kinderecke vorhanden</li>
+              <li>Zugang über Treppen (nicht barrierefrei)</li>
+              <li>Parkplätze begrenzt, Parkhaus in der Nähe</li>
+            </ul>
+            <p><strong>Speisekarte:</strong></p>
+            <p><a href="https://cdn7.site-media.eu/images/document/17264409/SpeisekarteHomepage-7t3N6k1T1yoYAXkI-8mMWQ.pdf" target="_blank" style="color:#b48e5c;text-decoration:underline;">Hier zur Speisekarte</a> – vegetarische und vegane Optionen verfügbar! 🌱</p>
+            <p>Mehr zur <a href="#orte" style="color:#b48e5c;text-decoration:underline;">Anfahrt & Karten</a></p>
+          </div>
+        </details>
+      </li>
+      <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
+        <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Gibt es einen Dresscode?</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">Festlich, aber entspannt – zieht euch einfach schick an, wie ihr euch wohlfühlt.</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Festlich, aber entspannt – zieht euch einfach schick an, wie ihr euch wohlfühlt.</p>
         </details>
       </li>
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Geschenke?</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">Bitte keine Geschenke – eure Anwesenheit ist das Schönste. 🧡<br><br>Falls ihr uns unbedingt etwas schenken möchtet, freuen wir uns über einen Beitrag zu unserer Ehekasse.</p>
-        </details>
-      </li>
-      <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
-        <details>
-          <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Essen & Getränke</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">Hier ist die <a href="https://cdn7.site-media.eu/images/document/17264409/SpeisekarteHomepage-7t3N6k1T1yoYAXkI-8mMWQ.pdf" target="_blank" style="color:#b48e5c;text-decoration:underline;">Speisekarte der Tomasa Villa</a> – ihr könnt vor Ort unkompliziert davon bestellen. Vegetarische und vegane Optionen sind verfügbar! 🌱</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Bitte keine Geschenke – eure Anwesenheit ist das Schönste. 🧡<br><br>Falls ihr uns unbedingt etwas schenken möchtet, freuen wir uns über einen Beitrag zu unserer Ehekasse.</p>
         </details>
       </li>
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Sektempfang bei schönem Wetter?</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">Wenn das Wetter mitspielt, machen wir den Sektempfang draußen im Park! 🌤️ Plant eine leichte Jacke ein für Oktober.</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Wenn das Wetter mitspielt, machen wir den Sektempfang draußen im Park! 🌤️ Plant eine leichte Jacke ein für Oktober.</p>
         </details>
       </li>
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">WhatsApp-Gruppe & Updates</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">Tretet gerne unserer <a href="#whatsapp" style="color:#b48e5c;text-decoration:underline;">WhatsApp-Gruppe</a> bei für schnelle Updates und zum Fotosaustausch! 📱<br><br>Den <a href="#kalender" style="color:#b48e5c;text-decoration:underline;">Kalender-Download</a> gibt es auch weiter unten. 📅</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Tretet gerne unserer <a href="#whatsapp" style="color:#b48e5c;text-decoration:underline;">WhatsApp-Gruppe</a> bei für schnelle Updates und zum Fotosaustausch! 📱<br><br>Den <a href="#kalender" style="color:#b48e5c;text-decoration:underline;">Kalender-Download</a> gibt es auch weiter unten. 📅</p>
         </details>
       </li>
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Fotos & Fotograf</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">📸 Es wird einen professionellen Fotografen geben für Gruppenfotos beim Sektempfang (bei schlechtem Wetter im Standesamt-Foyer).<br><br>Fotografiert auch gerne selbst und teilt eure Bilder über unseren <a href="#fotos" style="color:#b48e5c;text-decoration:underline;">Foto-Upload</a>.<br><br><strong>Wichtig:</strong> Bitte keinen Reis werfen! 🚫🌾</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">📸 Es wird einen professionellen Fotografen geben für Gruppenfotos beim Sektempfang (bei schlechtem Wetter im Standesamt-Foyer).<br><br>Fotografiert auch gerne selbst und teilt eure Bilder über unseren <a href="#fotos" style="color:#b48e5c;text-decoration:underline;">Foto-Upload</a>.<br><br><strong>Wichtig:</strong> Bitte keinen Reis werfen! 🚫🌾</p>
         </details>
       </li>
       <li style="border-bottom:1px solid #e5e3df;padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Parken & ÖPNV</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">Routen bitte über Google Maps planen. Plant ein paar Minuten Puffer ein – vor allem am Standesamt.<br><br>Alle Details zur Anfahrt findet ihr unter <a href="#orte" style="color:#b48e5c;text-decoration:underline;">Orte & Anfahrt</a>.</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Routen bitte über Google Maps planen. Plant ein paar Minuten Puffer ein – vor allem am Standesamt.<br><br>Alle Details zur Anfahrt findet ihr unter <a href="#orte" style="color:#b48e5c;text-decoration:underline;">Orte & Anfahrt</a>.</p>
         </details>
       </li>
       <li style="padding:1.2rem 0;">
         <details>
           <summary style="font-size:1.15rem;font-weight:600;cursor:pointer;color:#b48e5c;font-family:'Playfair Display',serif;">Barrierefreiheit</summary>
-          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;">Standesamt: Fahrstuhl vorhanden. Tomasa: Zugang über Treppen.</p>
+          <p style="margin-top:0.7rem;color:#7c6f57;font-size:1.05rem;text-align:left;">Standesamt: Fahrstuhl vorhanden. Tomasa: Zugang über Treppen.</p>
         </details>
       </li>
     </ul>
@@ -583,6 +728,28 @@
         // Nicht authentifiziert - Passwort-Bildschirm anzeigen, Hauptinhalt verstecken
         document.getElementById('password-screen').style.display = 'flex';
         document.getElementById('main-content').style.display = 'none';
+      }
+    });
+
+    // Lightbox Funktionen
+    function openLightbox(imageSrc) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      lightboxImg.src = imageSrc;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.classList.remove('active');
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    // ESC-Taste zum Schließen der Lightbox
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeLightbox();
       }
     });
   </script>
