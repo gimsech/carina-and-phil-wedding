@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Carina & Phil – 17.10.2025</title>
   <meta name="description" content="Alle Infos zu unserer standesamtlichen Trauung am 17.10.2025 in Berlin: Ablauf, Orte, Anfahrt, WhatsApp-Gruppe, Kalenderdatei, FAQ & Fotoupload." />
+  <link rel="icon" type="image/x-icon" id="favicon" href="data:image/x-icon;base64," />
   <link rel="stylesheet" href="styles/main.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -1016,6 +1017,57 @@
     setInterval(updateScheduleHighlight, 30000);
     // Initiales Update
     updateScheduleHighlight();
+
+    // Dynamisches Countdown Favicon
+    function updateFavicon() {
+      const wedding = new Date('2025-10-17T10:00:00+02:00');
+      const now = new Date();
+      const diffTime = wedding - now;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = 32;
+      canvas.height = 32;
+      const ctx = canvas.getContext('2d');
+      
+      // Hintergrund
+      ctx.fillStyle = '#b48e5c';
+      ctx.beginPath();
+      ctx.arc(16, 16, 16, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // Text/Emoji
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      if (diffDays <= 0) {
+        // Hochzeitstag oder danach - Ring Emoji
+        ctx.font = '18px Arial';
+        ctx.fillText('💍', 16, 16);
+      } else if (diffDays <= 10) {
+        // Letzten 10 Tage - Countdown
+        ctx.fillText(diffDays.toString(), 16, 16);
+      } else {
+        // Mehr als 10 Tage - Herz Emoji
+        ctx.font = '18px Arial';
+        ctx.fillText('💕', 16, 16);
+      }
+      
+      // Favicon aktualisieren
+      const favicon = document.getElementById('favicon');
+      favicon.href = canvas.toDataURL('image/x-icon');
+    }
+    
+    // Favicon initial setzen und täglich um Mitternacht aktualisieren
+    updateFavicon();
+    
+    // Update um Mitternacht oder alle Stunde für genauere Updates
+    setInterval(updateFavicon, 60 * 60 * 1000); // Jede Stunde
+    
+    // Sofort bei Seitenload aktualisieren falls sich Tag geändert hat
+    setTimeout(updateFavicon, 1000);
   </script>
 </body>
 </html>
