@@ -188,6 +188,17 @@
         padding: 1.5rem 1rem !important;
       }
     }
+
+    /* Mobile Optimierung für Route Container */
+    @media (max-width: 768px) {
+      .route-container {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 100% !important;
+        margin: 1rem 0 !important;
+        order: 3 !important; /* Zeigt Route unter beiden Standorten an */
+      }
+    }
     
     /* Lightbox für Standesamt-Bilder */
     .lightbox {
@@ -410,7 +421,7 @@
           <li>Parkplätze: Am Freitag ist Markt – weniger Plätze verfügbar. Alternativ: Parkhaus in der Nähe.</li>
         </ul>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:120px;max-width:160px;">
+      <div class="route-container" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:120px;max-width:160px;">
         <a href="https://www.google.com/maps/dir/?api=1&origin=Freiherr-vom-Stein-Stra%C3%9Fe+1%2C+10825+Berlin&destination=Kreuzbergstra%C3%9Fe+62%2C+10965+Berlin" target="_blank" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;font-size:1.08rem;color:#b48e5c;text-decoration:underline;font-family:'Quicksand',Arial,sans-serif;font-weight:600;margin-bottom:0.7rem;">
           <span style="font-size:1.5rem;">➡️</span>
           <span style="font-size:1.08rem;color:#7c6f57;">Route anzeigen</span>
